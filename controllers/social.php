@@ -55,18 +55,24 @@ class Social extends Public_Controller
 			case 'oauth':
 				include $this->module_details['path'].'/oauth/libraries/oauth.php';
 				$oauth = new OAuth;
-				$provider = $oauth->provider($provider, array(
+				
+				// Create an consumer from the config
+				$consumer = $oauth->consumer(array(
 					'key' => $credentials->client_key,
 					'secret' => $credentials->client_secret,
-					'scope' => $credentials->scope,
-					'callback' => site_url('social/callback/'.$provider),
 				));
+
+				// Load the provider
+				$provider = $oauth->provider($provider);
 				
 			break;
 			
 			case 'oauth2':
 				include $this->module_details['path'].'/oauth2/libraries/oauth2.php';
 				$oauth2 = new OAuth2;
+				
+				// OAuth2 is the honey badger when it comes to consumers - it just dont give a shit
+				$consumer = null;
 				
 				$provider = $oauth2->provider($provider, array(
 					'id' => $credentials->client_key,
@@ -80,18 +86,31 @@ class Social extends Public_Controller
 		}
 		
 		// Call session or callback, with lots of handy details
-		call_user_func(array($this, '_'.$method), $strategy, $provider);
+		call_user_func(array($this, '_'.$method), $strategy, $provider, $consumer);
 	}
 	
 	// Build the session and redirect to provider
-	private function _session($strategy, $provider)
+	private function _session($strategy, $provider, $consumer)
 	{
+		// Create the URL to return the user to
+		$callback = site_url('social/callback/'.$provider->name);
+		
 		switch ($strategy)
 		{
 			case 'oauth':
-				// Redirect off to... where-ever
-				$provider->authorize(array(
-					'redirect_uri' => site_url('social/callback/'.$provider->name),
+				
+				// Add the callback URL to the consumer
+				$consumer->callback($callback);	
+
+				// Get a request token for the consumer
+				$token = $provider->request_token($consumer);
+
+				// Store the token
+				$this->session->set_userdata('oauth_token', base64_encode(serialize($token)));
+
+				// Redirect to the twitter login page
+				$provider->authorize($token, array(
+					'oauth_callback' => $callback,
 				));
 				
 			break;
@@ -99,24 +118,47 @@ class Social extends Public_Controller
 			case 'oauth2':
 				// Redirect off to... where-ever
 				$provider->authorize(array(
-					'redirect_uri' => site_url('social/callback/'.$provider->name),
+					'redirect_uri' => $callback,
 				));
 			break;
 		}
 	}
 	
 	// We've got back from the provider, so get smart and save stuff
-	public function _callback($strategy, $provider)
+	public function _callback($strategy, $provider, $consumer)
 	{
 		switch ($strategy)
 		{
 			case 'oauth':
 			
-				// Grab the access token from the code
-				$token = $provider->access($_GET['code']);
+				if ($this->session->userdata('oauth_token'))
+				{
+					include $this->module_details['path'].'/oauth/libraries/OAuth_Token_Request.php';
+					
+					// Get the token from storage
+					$token = unserialize(base64_decode($this->session->userdata('oauth_token')));
+				}
 
+				if ( ! empty($token) AND $token->access_token !== $this->input->get_post('oauth_token'))
+				{	
+					// Delete the token, it is not valid
+					$this->session->unset_userdata('oauth_token');
+
+					// Send the user back to the beginning
+					exit('invalid token after coming back to site');
+				}
+
+				// Get the verifier
+				$verifier = $this->input->get_post('oauth_verifier');
+
+				// Store the verifier in the token
+				$token->verifier($verifier);
+
+				// Exchange the request token for an access token
+				$token = $provider->access_token($consumer, $token);
+			
 				// We got the token, let's get some user data
-				$user_hash = $provider->get_user_info($token);
+				$user_hash = $provider->get_user_info($consumer, $token);
 				
 			break;
 			
