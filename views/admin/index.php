@@ -23,13 +23,17 @@ jQuery(function($) {
 			
 			var $form = $(this).closest('form');
 			var $token = $('button.token', $form);
+			var $save = $('button.save', $form);
+			
+			// change something? enable save button
+			$save.prop('disabled', false).find('span').text('Save');
 			
 			if ($('input[name=client_key]', $form).val() && $('input[name=client_secret]', $form).val()) {
 				$token.prop('disabled', false);
 			}
-			
-			// change something? enable save button
-			$form.find('button.save').prop('disabled', false).find('span').text('Save');
+			else {
+				$token.prop('disabled', true);
+			}
 		});
 		
 	// Disable all save buttons, stop caching state
@@ -47,6 +51,12 @@ jQuery(function($) {
 		
 		// Otherwise disable that token button!
 		$(this).prop('disabled', true);
+	});
+	
+	$('button.clear').click(function() {
+		$.post(SITE_URL + 'admin/social/remove_credentials', { provider: this.value }, function() {
+			window.location.href = window.location.href;
+		});
 	});
 	
 	$('button.token').click(function() {
@@ -114,11 +124,15 @@ div.tokens dd {
 
 						<div class="buttons">
 							
-							<button type="submit" name="btnAction" value="save" class="btn blue save" disabled>
+							<button type="submit" name="save" value="save" class="btn blue save" disabled>
 								<span><?php echo lang('buttons.save'); ?></span>
 							</button>
 							
-							<button type="button" name="btnAction" value="<?php echo $provider ?>" class="btn orange token">
+							<button type="button" name="remove" value="<?php echo $provider ?>" class="btn red clear" <?php echo empty($details['credentials']->client_key) ? 'disabled' : '' ?>>
+								<span><?php echo lang('global:remove'); ?></span>
+							</button>
+
+							<button type="button" value="<?php echo $provider ?>" class="btn orange token">
 								<span><?php echo lang('social:get_tokens'); ?></span>
 							</button>
 							
@@ -134,22 +148,22 @@ div.tokens dd {
 								<dt><?php echo lang('social:secret') ?></dt>
 									<dd><?php echo ! empty($details['credentials']->secret) ? $details['credentials']->secret : lang('global:check-none') ?></dt>
 										
-										<dt><?php echo lang('social:refresh_token') ?></dt>
-										<dd><em>n/a</em></dd>
-										
-										<dt><?php echo lang('social:expires') ?></dt>
-										<dd><em>n/a</em></dd>
+									<dt><?php echo lang('social:refresh_token') ?></dt>
+									<dd><em>n/a</em></dd>
+									
+									<dt><?php echo lang('social:expires') ?></dt>
+									<dd><em>n/a</em></dd>
 							
 								<?php elseif ($details['strategy'] == 'oauth2'): ?>
 							
-								<dt><?php echo lang('social:secret') ?></dt>
-								<dd><em>n/a</em></dd>
+									<dt><?php echo lang('social:secret') ?></dt>
+									<dd><em>n/a</em></dd>
 								
-								<dt><?php echo lang('social:refresh_token') ?></dt>
-								<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
+									<dt><?php echo lang('social:refresh_token') ?></dt>
+									<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
 									
-								<dt><?php echo lang('social:expires') ?></dt>
-								<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
+									<dt><?php echo lang('social:expires') ?></dt>
+									<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
 									
 								<?php endif; ?>
 							</dl>

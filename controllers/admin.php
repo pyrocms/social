@@ -26,7 +26,7 @@ class Admin extends Admin_Controller
 				// Build an array of what is available
 				foreach ($libraries as $provider)
 				{
-					$name = basename($provider, '.php');
+					$name = strtolower(basename($provider, '.php'));
 					$providers[$name] = array(
 						'strategy' => $strategy,
 						'human' => ucfirst($name),
@@ -75,9 +75,12 @@ class Admin extends Admin_Controller
 			'secret' => $token['secret'],
 			'expires' => $token['expires'],
 			'refresh_token' => $token['refresh_token'],
-		)) or show_error('Failed to save tokens.');
+		)) or show_error(lang('social:failed_save_authentication'));
 		
 		$this->session->unset_userdata('token');
+		
+		// Set a success message
+		$this->session->set_flashdata('success', sprintf(lang('social:save_credentials'), $token['provider']));
 		
 		echo "<script>window.close();</script>";
 	}
@@ -88,7 +91,7 @@ class Admin extends Admin_Controller
 		if ( ! $this->input->post('client_key') or ! $this->input->post('client_secret'))
 		{
 			set_status_header(406);
-			exit(json_encode(array('error' => 'Failed to save credentials.')));
+			exit(json_encode(array('error' => lang('social:failed_save_credentials'))));
 		}
 		
 		$result = $this->credential_m->save(array(
@@ -105,5 +108,14 @@ class Admin extends Admin_Controller
 		}
 		
 		exit(json_encode(array('success' => true)));
+	}
+	
+	public function remove_credentials()
+	{
+		$provider = $this->input->post('provider') or show_404();
+		
+		$this->credential_m->delete_by('provider', $provider);
+		
+		$this->session->set_flashdata('success', sprintf(lang('social:removed_credentials'), $provider));
 	}
 }

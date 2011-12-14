@@ -185,6 +185,7 @@ class Social extends Public_Controller
 		// Are we taking this back to the admin?
 		if ($this->session->userdata('social_admin_redirect'))
 		{
+			// Send the token to the admin controller after redirect
 			$this->session->set_userdata('token', array(
 				'access_token' => $token->access_token,
 				'secret' => isset($token->secret) ? $token->secret : null,
