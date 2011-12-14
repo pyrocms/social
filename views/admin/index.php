@@ -1,14 +1,10 @@
-<section class="title">
-	<h4><?php echo lang('blog_posts_title'); ?></h4>
-</section>
-
 <script>
 jQuery(function($) {
 	
 	$('form.save_credentials')
 		.submit(function(){
 			var $form = $(this);
-			var $save = $('button', $form)
+			var $save = $('button.save', $form);
 		
 			$form.ajaxError(function(e, jqxhr, settings, exception) {
 				alert('Failed to save.');
@@ -25,18 +21,64 @@ jQuery(function($) {
 			// skip enter
 			if (event.which == 13) return;
 			
+			var $form = $(this).closest('form');
+			var $token = $('button.token', $form);
+			
+			if ($('input[name=client_key]', $form).val() && $('input[name=client_secret]', $form).val()) {
+				$token.prop('disabled', false);
+			}
+			
 			// change something? enable save button
-			$(this).closest('form').find('button.save').removeProp('disabled');
+			$form.find('button.save').prop('disabled', false).find('span').text('Save');
 		});
 		
-	// Disable all buttons, stop caching state
+	// Disable all save buttons, stop caching state
 	$('form.save_credentials button.save').prop('disabled', true);
+	
+	// Disable all token buttons, if credentials are not there
+	$('form.save_credentials button.token').each(function() {
+		$form = $(this).closest('form');
+		
+		// If they have stuff then show
+		if ($('input[name=client_key]', $form).val() && $('input[name=client_secret]', $form).val()) {
+			$(this).prop('disabled', false);
+			return;
+		}
+		
+		// Otherwise disable that token button!
+		$(this).prop('disabled', true);
+	});
+	
+	$('button.token').click(function() {
+		
+		var provider = this.value;
+		var url = SITE_URL + 'admin/social/token_redirect/' + provider;
+				
+		auth_window = window.open(url, 'provider-auth','width=600,height=500');
+		
+		auth_window.onunload = function() {
+			window.location.href = window.location.href;
+		}
+	});
+	
 })
 </script>
 
 <style>
 .form_inputs fieldset > ul > li > label {
 	width: 24%;
+}
+
+div.tokens dt {
+	float: left;
+	width: 100px;
+}
+div.tokens dd {
+	float: left;
+	width: 300px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 </style>
 
@@ -76,6 +118,41 @@ jQuery(function($) {
 								<span><?php echo lang('buttons.save'); ?></span>
 							</button>
 							
+							<button type="button" name="btnAction" value="<?php echo $provider ?>" class="btn orange token">
+								<span><?php echo lang('social:get_tokens'); ?></span>
+							</button>
+							
+						</div>
+						
+						<div class="tokens">
+							<dl>
+								<dt><?php echo lang('social:access_token') ?></dt>
+								<dd><?php echo isset($details['credentials']->access_token) ? '1'.$details['credentials']->access_token : lang('global:check-none') ?></dt>
+							
+								<?php if ($details['strategy'] == 'oauth'): ?>
+									
+								<dt><?php echo lang('social:secret') ?></dt>
+									<dd><?php echo ! empty($details['credentials']->secret) ? $details['credentials']->secret : lang('global:check-none') ?></dt>
+										
+										<dt><?php echo lang('social:refresh_token') ?></dt>
+										<dd><em>n/a</em></dd>
+										
+										<dt><?php echo lang('social:expires') ?></dt>
+										<dd><em>n/a</em></dd>
+							
+								<?php elseif ($details['strategy'] == 'oauth2'): ?>
+							
+								<dt><?php echo lang('social:secret') ?></dt>
+								<dd><em>n/a</em></dd>
+								
+								<dt><?php echo lang('social:refresh_token') ?></dt>
+								<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
+									
+								<dt><?php echo lang('social:expires') ?></dt>
+								<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
+									
+								<?php endif; ?>
+							</dl>
 						</div>
 					
 					</fieldset>

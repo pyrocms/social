@@ -6,4 +6,11 @@
  * @since		v2.1
  *
  */
-class Authentication_m extends MY_Model {}
+class Authentication_m extends MY_Model
+{
+	public function save($input)
+	{
+		$input['created_at'] = time();
+		return $this->db->replace('authentications', $input);
+	}
+}

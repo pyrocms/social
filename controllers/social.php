@@ -19,13 +19,19 @@ class Social extends Public_Controller
 	{
 		parent::__construct();
 		
-		// $this->load->config('social');
+		$this->lang->load('social');
 		
 		$this->load->model(array('authentication_m', 'credential_m'));
 	}
 	
 	public function _remap($method, $args)
 	{
+		if ($method == 'linked')
+		{
+			$this->linked();
+			return;
+		}
+		
 		// Invalid method or no provider = BOOM
 		if ( ! in_array($method, array('session', 'callback')) or empty($args))
 		{
@@ -125,7 +131,7 @@ class Social extends Public_Controller
 	}
 	
 	// We've got back from the provider, so get smart and save stuff
-	public function _callback($strategy, $provider, $consumer)
+	private function _callback($strategy, $provider, $consumer)
 	{
 		switch ($strategy)
 		{
@@ -176,6 +182,22 @@ class Social extends Public_Controller
 		// Let's get ready to interact with users
 		$this->load->model('authentication_m');
 	
+		// Are we taking this back to the admin?
+		if ($this->session->userdata('social_admin_redirect'))
+		{
+			$this->session->set_userdata('token', array(
+				'access_token' => $token->access_token,
+				'secret' => isset($token->secret) ? $token->secret : null,
+				'expires' => isset($token->expires) ? $token->expires : null,
+				'refresh_token' => isset($token->refresh_token) ? $token->refresh_token : null,
+				'provider' => $provider->name,
+			));
+			
+			$this->session->unset_userdata('social_admin_redirect');
+			
+			redirect('admin/social/token_save');
+		}
+	
 		// Are they logged in?
 		if ($this->current_user)
 		{
@@ -196,7 +218,7 @@ class Social extends Public_Controller
 				}
 
 				// Attach this account to the logged in user
-				$this->authentication_m->insert(array(
+				$this->authentication_m->save(array(
 					'user_id' 		=> $this->current_user->id,
 					'provider' 		=> $provider->name,
 					'uid' 			=> $user_hash['uid'],
@@ -204,11 +226,10 @@ class Social extends Public_Controller
 					'secret' 		=> isset($token->secret) ? $token->secret : null,
 					'expires' 		=> isset($token->expires) ? $token->expires : null,
 					'refresh_token' => isset($token->refresh_token) ? $token->refresh_token : null,
-					'created_at' 	=> time(),
 				));
 			
 				// Attachment went ok so we'll redirect
-				redirect('social/linked');
+				redirect($this->input->get('success_url') ? $this->input->get('success_url') : 'social/linked');
 			}
 		
 			else
@@ -242,11 +263,26 @@ class Social extends Public_Controller
 					'access_token' => $token->access_token,
 					'expires' => $token->expires,
 					'refresh_token' => $token->refresh_token,
-					'provider' => $provider->name
+					'provider' => $provider->name,
 				),
 			));
 
 			redirect('users/register');
 		}
+	}
+	
+	// List of Linked accounts
+	public function linked()
+	{
+		$this->current_user or redirect('users/login/social/linked');
+		
+		$authentications = $this->authentication_m->get_many_by(array(
+			'user_id' => $this->current_user->id,
+		));
+		
+		// 
+		$this->template->build('linked', array(
+			'authentications' => $authentications,
+		));
 	}
 }

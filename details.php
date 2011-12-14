@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Module_Social extends Module {
-
+class Module_Social extends Module
+{
 	public $version = '1.0';
 
 	public function info()
@@ -15,8 +15,8 @@ class Module_Social extends Module {
 			),
 			'frontend' => true,
 			'backend'  => true,
+			'menu'	  => 'utilities',
 			'skip_xss' => TRUE,
-			'menu'	  => FALSE
 		);
 	}
 
@@ -37,7 +37,8 @@ class Module_Social extends Module {
 			  `user_id` int(11) DEFAULT NULL,
 			  `expires` int(12) DEFAULT '0',
 			  `refresh_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-			  PRIMARY KEY (`id`)
+			  PRIMARY KEY (`id`),
+			  UNIQUE KEY `unique` (`user_id`,`provider`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		";
 		

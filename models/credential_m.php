@@ -13,10 +13,22 @@ class Credential_m extends MY_Model
 		return $this->db->replace('credentials', $input);
 	}
 	
+	public function save_token($provider, $input)
+	{
+		$this->db->where('provider', $provider);
+		
+		return $this->db->update('credentials', array(
+			'access_token' => $input['access_token'],
+			'secret' => $input['secret'],
+			'expires' => $input['expires'],
+			'refresh_token' => $input['refresh_token'],
+		));
+	}
+	
 	public function get_active_provider($provider)
 	{
 		return $this->db
-			->select('client_key, client_secret, scope')
+			->select('client_key, client_secret, scope, access_token, secret')
 			->where('provider', $provider)
 			->where('client_key IS NOT NULL')
 			->where('client_secret IS NOT NULL')

@@ -17,9 +17,12 @@ class Events_Social
         
         // register the public_controller event when this file is autoloaded
         Events::register('post_user_register', array($this, 'save_authentication'));
+
+		// Post a blog to twitter and whatnot
+        Events::register('blog_article_published', array($this, 'post_status'));
      }
     
-    // this will be triggered by the Events::trigger('public_controller') code in Public_Controller.php
+    // this will be triggered by the Events::trigger('save_authentication') code in modules/users/controllers/.php
     public function save_authentication($user_id)
     {
 		// Let's get ready to interact with users
@@ -33,7 +36,7 @@ class Events_Social
 		$this->ci->session->unset_userdata('token');
 		
 		// Attach this account to the logged in user
-		$this->ci->authentication_m->insert(array(
+		$this->ci->authentication_m->save(array(
 			'user_id' 		=> $user_id,
 			'provider' 		=> $token['provider'],
 			'uid' 			=> $user_hash['uid'],
@@ -41,9 +44,41 @@ class Events_Social
 			'secret' 		=> isset($token['secret']) ? $token['secret'] : null,
 			'expires' 		=> isset($token['expires']) ? $token['expires'] : null,
 			'refresh_token' => isset($token['refresh_token']) ? $token['refresh_token'] : null,
-			'created_at' 	=> time(),
 		));
     }
+
+	public function post_status($article)
+	{	
+		$this->ci->load->model('social/credential_m');
+		
+		$url = site_url('blog/'.date('Y/m').'/'.$this->ci->input->post('slug'));
+		
+		// Try and post that shit to facebook!
+		if (($credentials = $this->ci->credential_m->get_active_provider('facebook')))
+		{
+			$params = array(
+				'access_token' => $credentials->access_token, 
+				'name'=> $this->ci->input->post('title'),
+				'message'=> html_entity_decode(strip_tags($this->ci->input->post('intro'))),
+				'link' => $url,
+			);
+			
+			$url = "https://graph.facebook.com/me/feed";
+			$ch = curl_init();
+			curl_setopt_array($ch, array(
+				CURLOPT_URL => $url,
+				CURLOPT_POSTFIELDS => $params,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_VERBOSE => true
+			));
+			$result = curl_exec($ch);
+		}
+		
+		
+		dump($article);
+		exit;
+	}
 }
 
 /* End of file events.php */

@@ -56,6 +56,31 @@ class Admin extends Admin_Controller
 			'providers' => $providers,
 		));
 	}
+
+	
+	public function token_redirect($provider)
+	{
+		$this->session->set_userdata('social_admin_redirect', 'true');
+		
+		redirect('social/session/'.strtolower($provider));
+	}
+	
+	
+	public function token_save()
+	{
+		$token = $this->session->userdata('token');
+		
+		$this->credential_m->save_token($token['provider'], array(
+			'access_token' => $token['access_token'],
+			'secret' => $token['secret'],
+			'expires' => $token['expires'],
+			'refresh_token' => $token['refresh_token'],
+		)) or show_error('Failed to save tokens.');
+		
+		$this->session->unset_userdata('token');
+		
+		echo "<script>window.close();</script>";
+	}
 	
 	
 	public function save_credentials($provider)
