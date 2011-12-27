@@ -117,7 +117,7 @@ div.tokens dd {
 							
 							<li>
 								<label for="scope"><?php echo lang('social:scope'); ?></label>
-								<div class="input"><?php echo form_input('scope', isset($details['credentials']) ? $details['credentials']->scope : ''); ?></div>				
+								<div class="input"><?php echo form_input('scope', isset($details['credentials']) ? $details['credentials']->scope : (empty($details['default_scope']) ? '' : $details['default_scope'])); ?></div>				
 							</li>
 							
 						</ul>

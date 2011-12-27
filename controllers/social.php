@@ -10,6 +10,7 @@ class Social extends Public_Controller
 		'google' => 'oauth2',
 		'github' => 'oauth2',
 		'linkedin' => 'oauth',
+		'tumblr' => 'oauth',
 		// 'openid' => 'OpenId',
 		'windowslive' => 'oauth2',
 		'youtube' => 'oauth2',

@@ -7,6 +7,20 @@
  */
 class Admin extends Admin_Controller
 {
+	protected $providers = array(
+		'facebook' => array('human' => 'Facebook', 'default_scope' => 'offline_access,email,publish_stream'),
+		'twitter' => array('human' => 'Twitter'),
+		'dropbox' => array('human' => 'Dropbox'),
+		'flickr' => array('human' => 'Flickr'),
+		'google' => array('human' => 'Google', 'default_scope' => 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'),
+		'github' => array('human' => 'GitHub'),
+		'linkedin' => array('human' => 'LinkedIn'),
+		'tumblr' => array('human' => 'Tumblr'),
+		// 'openid' => array('human' => 'OpenId'),
+		'windowslive' => array('human' => 'Windows Live'),
+		'youtube' => array('human' => 'YouTube'),
+	);
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -27,9 +41,11 @@ class Admin extends Admin_Controller
 				foreach ($libraries as $provider)
 				{
 					$name = strtolower(basename($provider, '.php'));
+					
 					$providers[$name] = array(
 						'strategy' => $strategy,
-						'human' => ucfirst($name),
+						'human' => $this->providers[$name]['human'],
+						'default_scope' => element('default_scope', $this->providers[$name], NULL),
 					);
 				}
 			}

@@ -75,9 +75,6 @@ class Events_Social
 			$result = curl_exec($ch);
 		}
 		
-		
-		dump($article);
-		exit;
 	}
 }
 
