@@ -36,6 +36,7 @@ class OAuth_Provider_Dropbox extends OAuth_Provider {
 		return array(
 			'uid' => $token->uid,
 			'name' => $user->display_name,
+			'email' => $user->email,
 			'location' => $user->country,
 		);
 	}
