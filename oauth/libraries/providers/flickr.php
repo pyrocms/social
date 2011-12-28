@@ -16,9 +16,7 @@
  * @since      3.0.7
  */
 
-namespace OAuth;
-
-class Provider_Flickr extends Provider {
+class OAuth_Provider_Flickr extends OAuth_Provider {
 
 	public $name = 'flickr';
 
