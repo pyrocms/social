@@ -5,6 +5,7 @@ jQuery(function($) {
 		.submit(function(){
 			var $form = $(this);
 			var $save = $('button.save', $form);
+			var $status = $('button.status', $form);
 		
 			$form.ajaxError(function(e, jqxhr, settings, exception) {
 				alert('Failed to save.');
@@ -12,6 +13,7 @@ jQuery(function($) {
 		
 			$.post($form.attr('action'), $form.serialize(), function(response, status) {
 				$save.prop('disabled', true);
+				$status.prop('disabled', false);
 				$('span', $save).text('Saved!');
 			}, 'json');
 		
@@ -40,28 +42,49 @@ jQuery(function($) {
 	$('form.save_credentials button.save').prop('disabled', true);
 	
 	// Disable all token buttons, if credentials are not there
-	$('form.save_credentials button.token').each(function() {
-		$form = $(this).closest('form');
+	$('div.provider').each(function() {
+		$provider = $(this);
 		
 		// If they have stuff then show
-		if ($('input[name=client_key]', $form).val() && $('input[name=client_secret]', $form).val()) {
-			$(this).prop('disabled', false);
+		if ($('input[name=client_key]', $provider).val() && $('input[name=client_secret]', $provider).val()) {
+			$('button.token', $provider).prop('disabled', false);
+			$('button.status', $provider).prop('disabled', false).removeProp('disabled');
 			return;
 		}
 		
 		// Otherwise disable that token button!
-		$(this).prop('disabled', true);
-	});
+		$('button.token', $provider).prop('disabled', true);
+		$('button.status', $provider).prop('disabled', true);
+	});	
 	
 	$('button.clear').click(function() {
-		$.post(SITE_URL + 'admin/social/remove_credentials', { provider: this.value }, function() {
+		var provider = $(this).closest('div.provider').data('provider');
+		$.post(SITE_URL + 'admin/social/remove_credentials', { provider: provider }, function() {
 			window.location.href = window.location.href;
+		});
+	});
+	
+	$('button.status').click(function() {
+		
+		var $provider = $(this).closest('div.provider'),
+			provider = $provider.data('provider'),
+			status = this.value;
+		
+		$.post(SITE_URL + 'admin/social/save_status/' + provider, { status: status }, function() {
+			if (parseInt(status) === 1) {
+				$('button[name=enable]', $provider).hide();
+				$('button[name=disable]', $provider).removeClass('hidden').show();
+			}
+			else {
+				$('button[name=enable]', $provider).removeClass('hidden').show();
+				$('button[name=disable]', $provider).hide();
+			}
 		});
 	});
 	
 	$('button.token').click(function() {
 		
-		var provider = this.value;
+		var provider = $(this).closest('div.provider').data('provider');
 		var url = SITE_URL + 'admin/social/token_redirect/' + provider;
 				
 		auth_window = window.open(url, 'provider-auth','width=600,height=500');
@@ -96,7 +119,7 @@ div.tokens dd {
 
 	<?php foreach ($providers as $provider => $details): ?>
 
-		<div class="<?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?>">
+		<div data-provider="<?php echo $provider ?>" class="provider <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?>">
 
 			<?php echo form_open('admin/social/save_credentials/'.$provider, 'class="save_credentials"') ?>
 			
@@ -131,8 +154,16 @@ div.tokens dd {
 							<button type="button" name="remove" value="<?php echo $provider ?>" class="btn red clear" <?php echo empty($details['credentials']->client_key) ? 'disabled' : '' ?>>
 								<span><?php echo lang('global:remove'); ?></span>
 							</button>
+							
+							<button type="button" name="disable" value="0" class="btn red status <?php echo empty($details['credentials']->is_active) ? 'hidden' : '' ?>">
+								<span><?php echo lang('global:disable'); ?></span>
+							</button>
+							
+							<button type="button" name="enable" value="1" class="btn green status <?php echo empty($details['credentials']->is_active) ? '' : 'hidden' ?>">
+								<span><?php echo lang('global:enable'); ?></span>
+							</button>
 
-							<button type="button" value="<?php echo $provider ?>" class="btn orange token">
+							<button type="button" class="btn orange token">
 								<span><?php echo lang('social:get_tokens'); ?></span>
 							</button>
 							

@@ -91,6 +91,7 @@ class Admin extends Admin_Controller
 			'secret' => $token['secret'],
 			'expires' => $token['expires'],
 			'refresh_token' => $token['refresh_token'],
+			'is_active' => true,
 		)) or show_error(lang('social:failed_save_authentication'));
 		
 		$this->session->unset_userdata('token');
@@ -124,6 +125,11 @@ class Admin extends Admin_Controller
 		}
 		
 		exit(json_encode(array('success' => true)));
+	}
+	
+	public function save_status($provider)
+	{
+		$this->credential_m->save_status($provider, (bool) $this->input->post('status'));
 	}
 	
 	public function remove_credentials()

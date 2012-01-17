@@ -47,7 +47,7 @@ class Social extends Public_Controller
 		{
 			show_404();
 		}
-		
+
 		// Look to see if we have this provider in the db?
 		if ( ! ($credentials = $this->credential_m->get_active_provider($provider)))
 		{

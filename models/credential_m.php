@@ -25,12 +25,22 @@ class Credential_m extends MY_Model
 		));
 	}
 	
+	public function save_status($provider, $status)
+	{
+		$this->db->where('provider', $provider);
+		
+		return $this->db->update('credentials', array(
+			'is_active' => $status,
+		));
+	}
+	
 	public function get_active_provider($provider)
 	{
 		return $this->db
 			->select('client_key, client_secret, scope, access_token, secret')
 			->where('provider', $provider)
 			->where('client_key IS NOT NULL')
+			->where('is_active', true)
 			->where('client_secret IS NOT NULL')
 			->get('credentials')
 			->row();
