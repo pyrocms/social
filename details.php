@@ -53,6 +53,8 @@ class Module_Social extends Module
 			  `secret` text COLLATE utf8_unicode_ci DEFAULT NULL,
 			  `expires` int(12) DEFAULT '0',
 			  `refresh_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+			  `uid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+			  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
 			  `is_active` tinyint(1) DEFAULT '0',
 			  PRIMARY KEY (`id`),
 			  UNIQUE KEY `unique` (`provider`)

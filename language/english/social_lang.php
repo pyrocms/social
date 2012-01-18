@@ -20,3 +20,6 @@ $lang['social:removed_credentials'] 		= 'Credentials for "%s" have been removed.
 // frontend
 $lang['social:linked_accounts']            	= 'Linked accounts';
 $lang['social:get_tokens']           	 	= 'Get Tokens';
+
+$lang['social:pick_account']           	 	= 'Pick Account';
+$lang['social:pick_account_message']   	 	= 'You have the ability to post from multiple accounts or profiles, please select which you would like to authenticate with.';

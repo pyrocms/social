@@ -8,7 +8,7 @@
 class Admin extends Admin_Controller
 {
 	protected $providers = array(
-		'facebook' => array('human' => 'Facebook', 'default_scope' => 'offline_access,email,publish_stream'),
+		'facebook' => array('human' => 'Facebook', 'default_scope' => 'offline_access,email,publish_stream,manage_pages'),
 		'twitter' => array('human' => 'Twitter'),
 		'dropbox' => array('human' => 'Dropbox'),
 		'flickr' => array('human' => 'Flickr'),
@@ -86,19 +86,109 @@ class Admin extends Admin_Controller
 	{
 		$token = $this->session->userdata('token');
 		
+		// If we are dealing with Facebook we have to do some snazzy shit
+		if ($token['provider'] !== 'facebook')
+		{
+			$this->_token_save($token);
+		}
+		
+		// Facebook
+		else
+		{
+			$this->load->library('curl');
+			
+			// Get accounts
+			$accounts = json_decode($this->curl->simple_get("https://graph.facebook.com/me/accounts", array('access_token' => $token['access_token'])), true);
+			
+			// No page has been selected, so show the form with options
+			if ( ! $this->input->post('account'))
+			{
+				// Get user data
+				$me = @json_decode($this->curl->simple_get("https://graph.facebook.com/me", array('access_token' => $token['access_token'])), true);
+				
+				// No account? Use the main user
+				if ( ! isset($accounts['data'][0]))
+				{
+					$this->_token_save(array_merge($token, array(
+						'uid' => $me['id'],
+						'name' => $me['name'],
+					)));
+					exit;
+				}
+			
+				// Nope they have pages, so show them in a form
+				else
+				{
+					$account_select = array();
+					foreach ($accounts['data'] as $account)
+					{
+						$account_select[$account['id']] = $account['name'];
+					}
+
+					$this->template
+						->set_layout('modal')
+						->build('admin/pick_account', array(
+							'main' => $me,
+							'accounts' => $account_select,
+						));
+					
+					return;
+				}
+			}
+			
+			// If any account other than "main" is selected use that
+			elseif ($this->input->post('account') != 'main')
+			{
+				// Loop through the accounts until...
+				foreach ($accounts['data'] as $account)
+				{
+					// ... we find the relevant one
+					if ($account['id'] == $this->input->post('account'))
+					{
+						$this->_token_save(array_merge($token, array(
+							'uid' => $account['id'],
+							'name' => $account['name'],
+							'access_token' => $account['access_token'],
+						)));
+						exit;
+					}
+				}
+				
+				show_error('Invalid account selected.');
+			}
+			else
+			{
+				// Get user data
+				$me = @json_decode($this->curl->simple_get("https://graph.facebook.com/me", array('access_token' => $token['access_token'])), true);
+				
+				$this->_token_save(array_merge($token, array(
+					'uid' => $me['id'],
+					'name' => $me['name'],
+				)));
+				exit;
+			}
+		}
+	}
+	
+	
+	private function _token_save($token)
+	{
+		// Save this credential
 		$this->credential_m->save_token($token['provider'], array(
 			'access_token' => $token['access_token'],
 			'secret' => $token['secret'],
 			'expires' => $token['expires'],
 			'refresh_token' => $token['refresh_token'],
-			'is_active' => true,
+			'uid' => isset($token['uid']) ? $token['uid'] : NULL,
+			'name' => isset($token['name']) ? $token['name'] : NULL,
+			'is_active' => TRUE,
 		)) or show_error(lang('social:failed_save_authentication'));
 		
 		$this->session->unset_userdata('token');
 		
 		// Set a success message
 		$this->session->set_flashdata('success', sprintf(lang('social:save_credentials'), $token['provider']));
-		
+	
 		echo "<script>window.close();</script>";
 	}
 	

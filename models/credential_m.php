@@ -22,6 +22,8 @@ class Credential_m extends MY_Model
 			'secret' => $input['secret'],
 			'expires' => $input['expires'],
 			'refresh_token' => $input['refresh_token'],
+			'uid' => $input['uid'],
+			'name' => $input['name'],
 		));
 	}
 	

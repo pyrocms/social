@@ -63,18 +63,34 @@ class Events_Social
 				'link' => $url,
 			);
 			
-			$url = "https://graph.facebook.com/me/feed";
+			log_message('info', 'Post status with Facebook: '.json_encode($params));
+			
 			$ch = curl_init();
 			curl_setopt_array($ch, array(
-				CURLOPT_URL => $url,
+				CURLOPT_URL => 'https://graph.facebook.com/me/feed',
 				CURLOPT_POSTFIELDS => $params,
 				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_VERBOSE => true
 			));
 			$result = curl_exec($ch);
 		}
 		
+		// Twitter wants it too... yeah she does!
+		if (($credentials = $this->ci->credential_m->get_active_provider('twitter')))
+		{
+			$this->ci->load->library('twitter', array(
+				'consumer_key' => $credentials->client_key,
+				'consumer_secret' => $credentials->client_secret,
+				'oauth_token' => $credentials->access_token,
+				'oauth_token_secret' => $credentials->secret,
+			));
+			
+			$message = character_limiter(strip_tags($this->ci->input->post('title')), 130).' '.$url;
+			
+			log_message('info', 'Post status with Twitter: '.json_encode(array('status' => $message)));
+			
+			$this->ci->twitter->post('statuses/update', array('status' => $message));
+		}
 	}
 }
 

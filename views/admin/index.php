@@ -94,6 +94,15 @@ jQuery(function($) {
 		}
 	});
 	
+	
+	$('div.tokens dd span').live('click', function() {
+		$(this).parent().html( $('<input/>').val($(this).text()).css('width', '100%').prop('readonly', true) );
+	});
+	
+	$('div.tokens dd input').live('blur', function() {
+		$(this).parent().html( $('<span/>').text($(this).val()) );
+	});
+	
 })
 </script>
 
@@ -119,11 +128,11 @@ div.tokens dd {
 
 	<?php foreach ($providers as $provider => $details): ?>
 
-		<div data-provider="<?php echo $provider ?>" class="provider <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?>">
+		<div data-provider="<?php echo $provider ?>" class="provider one_half <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?>">
 
 			<?php echo form_open('admin/social/save_credentials/'.$provider, 'class="save_credentials"') ?>
 			
-				<div class="form_inputs one_half">
+				<div class="form_inputs">
 
 					<fieldset>
 <h5><?php echo $details['human'] ?></h5>
@@ -172,29 +181,29 @@ div.tokens dd {
 						<div class="tokens">
 							<dl>
 								<dt><?php echo lang('social:access_token') ?></dt>
-								<dd><?php echo isset($details['credentials']->access_token) ? '1'.$details['credentials']->access_token : lang('global:check-none') ?></dt>
+								<dd><?php echo isset($details['credentials']->access_token) ? "<span>{$details['credentials']->access_token}</span>" : lang('global:check-none') ?></dt>
 							
 								<?php if ($details['strategy'] == 'oauth'): ?>
 									
 								<dt><?php echo lang('social:secret') ?></dt>
-									<dd><?php echo ! empty($details['credentials']->secret) ? $details['credentials']->secret : lang('global:check-none') ?></dt>
-										
-									<dt><?php echo lang('social:refresh_token') ?></dt>
-									<dd><em>n/a</em></dd>
+								<dd><?php echo ! empty($details['credentials']->secret) ? "<span>{$details['credentials']->secret}</span>" : lang('global:check-none') ?></dt>
 									
-									<dt><?php echo lang('social:expires') ?></dt>
-									<dd><em>n/a</em></dd>
+								<dt><?php echo lang('social:refresh_token') ?></dt>
+								<dd><em>n/a</em></dd>
+								
+								<dt><?php echo lang('social:expires') ?></dt>
+								<dd><em>n/a</em></dd>
 							
 								<?php elseif ($details['strategy'] == 'oauth2'): ?>
+						
+								<dt><?php echo lang('social:secret') ?></dt>
+								<dd><em>n/a</em></dd>
 							
-									<dt><?php echo lang('social:secret') ?></dt>
-									<dd><em>n/a</em></dd>
+								<dt><?php echo lang('social:refresh_token') ?></dt>
+								<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
 								
-									<dt><?php echo lang('social:refresh_token') ?></dt>
-									<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
-									
-									<dt><?php echo lang('social:expires') ?></dt>
-									<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
+								<dt><?php echo lang('social:expires') ?></dt>
+								<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
 									
 								<?php endif; ?>
 							</dl>
