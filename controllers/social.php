@@ -60,7 +60,7 @@ class Social extends Public_Controller
 		switch ($strategy)
 		{
 			case 'oauth':
-				include $this->module_details['path'].'/oauth/libraries/oauth.php';
+				include $this->module_details['path'].'/oauth/libraries/OAuth.php';
 				$oauth = new OAuth;
 				
 				// Create an consumer from the config
