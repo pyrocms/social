@@ -75,7 +75,7 @@ class Social extends Public_Controller
 			break;
 			
 			case 'oauth2':
-				include $this->module_details['path'].'/oauth2/libraries/oauth2.php';
+				include $this->module_details['path'].'/oauth2/libraries/OAuth2.php';
 				$oauth2 = new OAuth2;
 				
 				// OAuth2 is the honey badger when it comes to consumers - it just dont give a shit
