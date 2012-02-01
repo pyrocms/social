@@ -95,7 +95,14 @@ class Admin extends Admin_Controller
 		// Facebook
 		else
 		{
-			$this->load->spark('curl/1.2.1');
+			if (version_compare(CMS_VERSION, '2.1.0', '<'))
+			{
+				$this->load->library('curl');
+			}
+			else
+			{
+				$this->load->spark('curl/1.2.1');
+			}
 			
 			// Get accounts
 			$accounts = json_decode($this->curl->simple_get("https://graph.facebook.com/me/accounts", array('access_token' => $token['access_token'])), true);

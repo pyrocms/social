@@ -128,7 +128,7 @@ div.tokens dd {
 
 	<?php foreach ($providers as $provider => $details): ?>
 
-		<div data-provider="<?php echo $provider ?>" class="provider one_half <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?>">
+		<div data-provider="<?php echo $provider ?>" class="provider one_half <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?> <?php echo alternator('', 'last') ?>" style="width: 485px">
 
 			<?php echo form_open('admin/social/save_credentials/'.$provider, 'class="save_credentials"') ?>
 			
@@ -165,11 +165,11 @@ div.tokens dd {
 							</button>
 							
 							<button type="button" name="disable" value="0" class="btn red status <?php echo empty($details['credentials']->is_active) ? 'hidden' : '' ?>">
-								<span><?php echo lang('global:disable'); ?></span>
+								<span><?php echo version_compare(CMS_VERSION, '2.1.0', '<') ? lang('disable_label') : lang('global:disable') ?></span>
 							</button>
 							
 							<button type="button" name="enable" value="1" class="btn green status <?php echo empty($details['credentials']->is_active) ? '' : 'hidden' ?>">
-								<span><?php echo lang('global:enable'); ?></span>
+								<span><?php echo version_compare(CMS_VERSION, '2.1.0', '<') ? lang('enable_label') : lang('global:enable') ?></span>
 							</button>
 
 							<button type="button" class="btn orange token">
