@@ -15,6 +15,8 @@ class Admin extends Admin_Controller
 		'google' => array('human' => 'Google', 'default_scope' => 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'),
 		'github' => array('human' => 'GitHub'),
 		'linkedin' => array('human' => 'LinkedIn'),
+		'mailchimp' => array('human' => 'MailChimp'),
+		'soundcloud' => array('human' => 'SoundCloud'),
 		'tumblr' => array('human' => 'Tumblr'),
 		// 'openid' => array('human' => 'OpenId'),
 		'windowslive' => array('human' => 'Windows Live'),

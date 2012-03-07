@@ -165,11 +165,11 @@ div.tokens dd {
 							</button>
 							
 							<button type="button" name="disable" value="0" class="btn red status <?php echo empty($details['credentials']->is_active) ? 'hidden' : '' ?>">
-								<span><?php echo version_compare(CMS_VERSION, '2.1.0', '<') ? lang('disable_label') : lang('global:disable') ?></span>
+								<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:disable') : lang('disable_label') ?></span>
 							</button>
 							
 							<button type="button" name="enable" value="1" class="btn green status <?php echo empty($details['credentials']->is_active) ? '' : 'hidden' ?>">
-								<span><?php echo version_compare(CMS_VERSION, '2.1.0', '<') ? lang('enable_label') : lang('global:enable') ?></span>
+								<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:enable') : lang('enable_label') ?></span>
 							</button>
 
 							<button type="button" class="btn orange token">
@@ -200,7 +200,7 @@ div.tokens dd {
 								<dd><em>n/a</em></dd>
 							
 								<dt><?php echo lang('social:refresh_token') ?></dt>
-								<dd><?php echo isset($details['credentials']->refresh_token) ? '1'.$details['credentials']->refresh_token : lang('global:check-none') ?></dt>
+								<dd><?php echo isset($details['credentials']->refresh_token) ? $details['credentials']->refresh_token : lang('global:check-none') ?></dt>
 								
 								<dt><?php echo lang('social:expires') ?></dt>
 								<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
