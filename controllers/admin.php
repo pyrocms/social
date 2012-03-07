@@ -97,13 +97,13 @@ class Admin extends Admin_Controller
 		// Facebook
 		else
 		{
-			if (version_compare(CMS_VERSION, '2.1.0', '<'))
+			if (version_compare(CMS_VERSION, '2.0.9', '>'))
 			{
-				$this->load->library('curl');
+				$this->load->spark('curl/1.2.1');
 			}
 			else
 			{
-				$this->load->spark('curl/1.2.1');
+				$this->load->library('curl');
 			}
 			
 			// Get accounts

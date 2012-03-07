@@ -10,6 +10,8 @@ class Social extends Public_Controller
 		'google' => 'oauth2',
 		'github' => 'oauth2',
 		'linkedin' => 'oauth',
+		'mailchimp' => 'oauth2',
+		'soundcloud' => 'oauth2',
 		'tumblr' => 'oauth',
 		// 'openid' => 'OpenId',
 		'windowslive' => 'oauth2',
@@ -32,7 +34,7 @@ class Social extends Public_Controller
 			$this->linked();
 			return;
 		}
-		
+
 		// Invalid method or no provider = BOOM
 		if ( ! in_array($method, array('session', 'callback')) or empty($args))
 		{
@@ -51,7 +53,9 @@ class Social extends Public_Controller
 		// Look to see if we have this provider in the db?
 		if ( ! ($credentials = $this->credential_m->get_active_provider($provider)))
 		{
-			show_404();
+			$this->ion_auth->is_admin()
+				? show_error('Social Integration: '.$provider.' is not supported, or not enabled.')
+				: show_404();
 		}
 		
 		// oauth or oauth 2?
