@@ -144,8 +144,6 @@ class Social extends Public_Controller
 			
 				if ($this->session->userdata('oauth_token'))
 				{
-					include $this->module_details['path'].'/oauth/libraries/OAuth_Token_Request.php';
-					
 					// Get the token from storage
 					$token = unserialize(base64_decode($this->session->userdata('oauth_token')));
 				}
