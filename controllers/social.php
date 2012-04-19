@@ -16,6 +16,7 @@ class Social extends Public_Controller
 		// 'openid' => 'OpenId',
 		'windowslive' => 'oauth2',
 		'youtube' => 'oauth2',
+		'foursquare' => 'oauth2'
 	);
 	
 	public function __construct()
