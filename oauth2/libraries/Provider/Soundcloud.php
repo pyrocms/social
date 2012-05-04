@@ -1,4 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * Soundcloud OAuth2 Provider
+ *
+ * @package    CodeIgniter/OAuth2
+ * @category   Provider
+ * @author     Phil Sturgeon
+ * @copyright  (c) 2012 HappyNinjas Ltd
+ * @license    http://philsturgeon.co.uk/code/dbad-license
+ */
 
 class OAuth2_Provider_Soundcloud extends OAuth2_Provider
 {	
