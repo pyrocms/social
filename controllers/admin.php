@@ -37,7 +37,7 @@ class Admin extends Admin_Controller
 		// Look for all oauth and oauth2 strategies
 		foreach (array('oauth', 'oauth2') as $strategy)
 		{		
-			if (($libraries = glob($this->module_details['path'].'/'.$strategy.'/libraries/providers/*.php')))
+			if (($libraries = glob($this->module_details['path'].'/'.$strategy.'/libraries/Provider/*.php')))
 			{
 				// Build an array of what is available
 				foreach ($libraries as $provider)

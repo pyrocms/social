@@ -1,4 +1,4 @@
-# CodeIgniter OAuth
+## CodeIgniter OAuth
 
 An implementation of the [OAuth](http://oauth.net/) protocol with drivers to work with different providers such as Twitter, Google, etc.
 
@@ -6,7 +6,7 @@ This is based on the wonderful [Kohana OAuth](https://github.com/kohana/oauth) p
 
 Note that this Spark ONLY provides the authorization mechanism. You will need to implement the example code below so you can save this information to make API requests on the users behalf.
 
-## Providers
+### Providers
 
 - Dropbox
 - Flickr
@@ -15,7 +15,15 @@ Note that this Spark ONLY provides the authorization mechanism. You will need to
 - Tumblr
 - Twitter
 
-## Usage Example
+### Installation
+
+#### Install with Sparks
+
+```console
+$ php tools/spark install -v0.3.0 oauth
+```
+
+### Usage Example
 
 This example will need the user to go to a certain URL, which will support multiple providers. I like to set a controller to handle it and either have one single "session" method - or have another method for callbacks if you want to separate out the code even more.
 
@@ -30,7 +38,7 @@ class Auth extends CI_Controller
 	{
 		$this->load->helper('url');
 		
-		$this->load->spark('oauth/0.2.1');
+		$this->load->spark('oauth/0.3.0');
 	
 		// Create an consumer from the config
 		$consumer = $this->oauth->consumer(array(
@@ -55,10 +63,13 @@ class Auth extends CI_Controller
 			// Store the token
 			$this->session->set_userdata('oauth_token', base64_encode(serialize($token)));
 
-			// Redirect to the twitter login page
-			$provider->authorize($token, array(
+			// Get the URL to the twitter login page
+			$url = $provider->authorize($token, array(
 				'oauth_callback' => $callback,
 			));
+
+			// Send the user off to login
+			redirect($url);
 		}
 		else
 		{

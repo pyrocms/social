@@ -2,7 +2,7 @@
 
 class Module_Social extends Module
 {
-	public $version = '1.0.3';
+	public $version = '1.1.0';
 
 	public function info()
 	{
