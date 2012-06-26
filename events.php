@@ -20,6 +20,9 @@ class Events_Social
 
 		// Post a blog to twitter and whatnot
         Events::register('blog_article_published', array($this, 'post_status'));
+		
+		// User deleted clean up any authentications
+		Events::register('user_deleted',array($this,'remove_authentications'));
      }
     
     // this will be triggered by the Events::trigger('save_authentication') code in modules/users/controllers/.php
@@ -90,6 +93,24 @@ class Events_Social
 			log_message('info', 'Post status with Twitter: '.json_encode(array('status' => $message)));
 			
 			$this->ci->twitter->post('statuses/update', array('status' => $message));
+		}
+	}
+
+	public function remove_authentications($users)
+	{
+		$this->ci->load->model('social/authentication_m');
+		
+		foreach($users as $user)
+		{
+			$auths = $this->ci->authentication_m->get_many_by(array('user_id'=>$user));
+			
+			if($auths)
+			{
+				foreach($auths as $auth)
+				{
+					$this->ci->authentication_m->delete($auth->id);
+				}
+			}
 		}
 	}
 }
