@@ -21,6 +21,10 @@ class Admin extends Admin_Controller
 		// 'openid' => array('human' => 'OpenId'),
 		'windowslive' => array('human' => 'Windows Live'),
 		'youtube' => array('human' => 'YouTube'),
+		'foursquare' => array('human' => 'Foursquare'),
+		'blooie' => array('human' => 'Blooie'),
+		'instagram' => array('human' => 'Instagram'),
+		'paypal' => array('human' => 'Paypal'),
 	);
 	
 	public function __construct()
