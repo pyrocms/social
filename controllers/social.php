@@ -16,6 +16,10 @@ class Social extends Public_Controller
 		// 'openid' => 'OpenId',
 		'windowslive' => 'oauth2',
 		'youtube' => 'oauth2',
+		'foursquare' => 'oauth2',
+		'blooie' => 'oauth2',
+		'instagram' => 'oauth2',
+		'paypal' => 'oauth2',
 	);
 	
 	public function __construct()
@@ -253,6 +257,8 @@ class Social extends Public_Controller
 			{
 			    show_error('Failed to log you in.');
 			}
+			
+			Events::trigger('post_user_login');
 		
 			$this->session->set_flashdata('success', lang('user_logged_in'));
 		    redirect('/');
