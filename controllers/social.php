@@ -3,19 +3,23 @@
 class Social extends Public_Controller
 {
 	protected $providers = array(
-		'facebook' => 'oauth2',
-		'twitter' => 'oauth',
+		'blooie' => 'oauth2',
 		'dropbox' => 'oauth',
+		'facebook' => 'oauth2',
 		'flickr' => 'oauth',
-		'google' => 'oauth2',
+		'foursquare' => 'oauth2',
 		'github' => 'oauth2',
+		'google' => 'oauth2',
+		'instagram' => 'oauth2',
 		'linkedin' => 'oauth',
 		'mailchimp' => 'oauth2',
+		'mailru' => 'oauth2',
 		'soundcloud' => 'oauth2',
 		'tumblr' => 'oauth',
-		// 'openid' => 'OpenId',
+		'twitter' => 'oauth',
+		'vkontakte' => 'oauth2',
 		'windowslive' => 'oauth2',
-		'youtube' => 'oauth2',
+		'yandex' => 'oauth2',
 	);
 	
 	public function __construct()
@@ -120,7 +124,7 @@ class Social extends Public_Controller
 				$this->session->set_userdata('oauth_token', base64_encode(serialize($token)));
 
 				// Redirect to the twitter login page
-				$provider->authorize($token, array(
+				$url = $provider->authorize($token, array(
 					'oauth_callback' => $callback,
 				));
 				
@@ -128,11 +132,16 @@ class Social extends Public_Controller
 			
 			case 'oauth2':
 				// Redirect off to... where-ever
-				$provider->authorize(array(
+				$url = $provider->authorize(array(
 					'redirect_uri' => $callback,
 				));
 			break;
+
+			default:
+				exit('Unknown strategy for '.$provider->name);
 		}
+
+		redirect($url);
 	}
 	
 	// We've got back from the provider, so get smart and save stuff

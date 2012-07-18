@@ -1,0 +1,6 @@
+[submodule "oauth"]
+	path = oauth
+	url = git@github.com:philsturgeon/codeigniter-oauth.git
+[submodule "oauth2"]
+	path = oauth2
+	url = git@github.com:philsturgeon/codeigniter-oauth2.git

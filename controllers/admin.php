@@ -8,18 +8,25 @@
 class Admin extends Admin_Controller
 {
 	protected $providers = array(
-		'facebook' => array('human' => 'Facebook', 'default_scope' => 'offline_access,email,publish_stream,manage_pages'),
-		'twitter' => array('human' => 'Twitter'),
+		'blooie' => array('human' => 'Blooie'),
 		'dropbox' => array('human' => 'Dropbox'),
+		'twitter' => array('human' => 'Twitter'),
+		'facebook' => array('human' => 'Facebook', 'default_scope' => 'offline_access,email,publish_stream,manage_pages'),
 		'flickr' => array('human' => 'Flickr'),
+		'foursquare' => array('human' => 'Foursquare'),
 		'google' => array('human' => 'Google', 'default_scope' => 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'),
 		'github' => array('human' => 'GitHub'),
+		'instagram' => array('human' => 'Instagram'),
 		'linkedin' => array('human' => 'LinkedIn'),
 		'mailchimp' => array('human' => 'MailChimp'),
+		'mailru' => array('human' => 'Mail.ru'),
+		'paypal' => array('human' => 'PayPal'),
 		'soundcloud' => array('human' => 'SoundCloud'),
 		'tumblr' => array('human' => 'Tumblr'),
 		// 'openid' => array('human' => 'OpenId'),
+		'vkontakte' => array('human' => 'Vkontakte'),
 		'windowslive' => array('human' => 'Windows Live'),
+		'yandex' => array('human' => 'Yandex'),
 		'youtube' => array('human' => 'YouTube'),
 	);
 	
