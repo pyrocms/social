@@ -8,11 +8,11 @@ $lang['social:scope']             			= 'Portée';
 $lang['social:access_token']                = 'Token d\'accès';
 $lang['social:secret']             			= 'Secret';
 $lang['social:expires']             		= 'Expire';
-$lang['social:refresh_token']               = 'Rafraîchir le token';
+$lang['social:refresh_token']               = 'Token renouv.';
 
 // messages
 $lang['social:missing_credentials'] 		= 'Merci de fournir une ID/Clé Client et un Client Secret.';
-$lang['social:failed_save_authentication'] 	= 'Echec de l\'enregistrement des tokens d\'authentication.';
+$lang['social:failed_save_authentication'] 	= 'Echec de l\'enregistrement des tokens d\'authentification.';
 $lang['social:failed_save_credentials'] 	= 'Echec de l\'enregistrement des informations de compte.';
 $lang['social:save_credentials'] 			= 'Les informations de compte de "%s" ont été enregistrées.';
 $lang['social:removed_credentials'] 		= 'Les informations de compte de "%s" ont été supprimées.';
