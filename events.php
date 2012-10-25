@@ -19,9 +19,9 @@ class Events_Social
         Events::register('post_user_register', array($this, 'save_authentication'));
 
 		// Post a blog to twitter and whatnot
-        Events::register('blog_article_published', array($this, 'post_status'));
+		Events::register('blog_article_published', array($this, 'post_status'));
 
-        // User deleted clean up any authentications
+		// User deleted clean up any authentications
 		Events::register('user_deleted',array($this,'remove_authentications'));
      }
     
@@ -99,11 +99,11 @@ class Events_Social
 	public function remove_authentications($users)
 	{
 		$this->ci->load->model('social/authentication_m');
-		
+
 		foreach($users as $user)
 		{
 			$auths = $this->ci->authentication_m->get_many_by(array('user_id'=>$user));
-			
+
 			if($auths)
 			{
 				foreach($auths as $auth)
