@@ -8,10 +8,12 @@ class Module_Social extends Module
 	{
 		return array(
 			'name' => array(
-				'en' => 'Social'
+				'en' => 'Social',
+				'fr' => 'Social'
 			),
 			'description' => array(
 				'en' => 'Link user accounts with Twitter, Facebook, Google and many more providers.',
+				'fr' => 'Lie les comptes utilisateurs avec Twitter, Facebook, Google et d\'autres fournisseurs.'
 			),
 			'frontend' => true,
 			'backend'  => true,
