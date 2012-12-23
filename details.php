@@ -13,7 +13,7 @@ class Module_Social extends Module
 			),
 			'description' => array(
 				'en' => 'Link user accounts with Twitter, Facebook, Google and many more providers.',
-				'fr' => 'Lie les comptes utilisateurs avec Twitter, Facebook, Google et d\'autres fournisseurs.'
+				'fr' => 'Lie les comptes utilisateurs avec Twitter, Facebook, Google et autres fournisseurs.'
 			),
 			'frontend' => true,
 			'backend'  => true,
@@ -27,7 +27,7 @@ class Module_Social extends Module
 		$this->dbforge->drop_table('authentications');
 		$this->dbforge->drop_table('credentials');
 
-		$authentications = "	
+		$authentications = "
 			CREATE TABLE ".$this->db->dbprefix('authentications')." (
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `provider` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -43,8 +43,8 @@ class Module_Social extends Module
 			  UNIQUE KEY `unique` (`user_id`,`provider`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		";
-		
-		$credentials = "	
+
+		$credentials = "
 			CREATE TABLE ".$this->db->dbprefix('credentials')." (
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `provider` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -73,7 +73,7 @@ class Module_Social extends Module
 	{
 		$this->dbforge->drop_table('authentications');
 		$this->dbforge->drop_table('credentials');
-		
+
 		return true;
 	}
 
