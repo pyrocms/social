@@ -182,6 +182,12 @@ class Social extends Public_Controller
 			
 			case 'oauth2':
 				
+				//check to ensure the GET string has 'code'. If not, we're probably dealing with a 
+				// user-initated cancel (eg. Facebook cancel perms request)
+				if( !isset($_GET['code'])) {
+					redirect('/');
+				}
+				
 				// Grab the access token from the code
 				$token = $provider->access($_GET['code']);
 
