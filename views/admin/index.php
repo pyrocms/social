@@ -157,7 +157,7 @@ div.tokens dd {
 						<div class="buttons">
 							
 							<button type="submit" name="save" value="save" class="btn blue save" disabled>
-								<span><?php echo lang('buttons.save'); ?></span>
+								<span><?php echo version_compare(CMS_VERSION, '2.1.5', '>') ? lang('buttons:save') : lang('buttons.save'); ?></span>
 							</button>
 							
 							<button type="button" name="remove" value="<?php echo $provider ?>" class="btn red clear" <?php echo empty($details['credentials']->client_key) ? 'disabled' : '' ?>>
