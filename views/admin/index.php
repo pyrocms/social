@@ -124,99 +124,107 @@ div.tokens dd {
 }
 </style>
 
-<section class="item">
-
-	<?php foreach ($providers as $provider => $details): ?>
-
-		<div data-provider="<?php echo $provider ?>" class="provider one_half <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?> <?php echo alternator('', 'last') ?>" style="width: 485px">
-
-			<?php echo form_open('admin/social/save_credentials/'.$provider, 'class="save_credentials"') ?>
-			
-				<div class="form_inputs">
-
-					<fieldset>
-<h5><?php echo $details['human'] ?></h5>
-						<ul>
-							<li>
-								<label for="client_key"><?php echo lang('social:client_key'); ?> <span>*</span></label>
-								<div class="input"><?php echo form_input('client_key', isset($details['credentials']) ? $details['credentials']->client_key : ''); ?></div>				
-							</li>
-							
-							<li>
-								<label for="client_secret"><?php echo lang('social:client_secret'); ?> <span>*</span></label>
-								<div class="input"><?php echo form_input('client_secret', isset($details['credentials']) ? $details['credentials']->client_secret : ''); ?></div>				
-							</li>
-							
-							<li>
-								<label for="scope"><?php echo lang('social:scope'); ?></label>
-								<div class="input"><?php echo form_input('scope', isset($details['credentials']) ? $details['credentials']->scope : (empty($details['default_scope']) ? '' : $details['default_scope'])); ?></div>				
-							</li>
-							
-						</ul>
-
-						<div class="buttons">
-							
-							<button type="submit" name="save" value="save" class="btn blue save" disabled>
-								<span><?php echo version_compare(CMS_VERSION, '2.1.5', '>') ? lang('buttons:save') : lang('buttons.save'); ?></span>
-							</button>
-							
-							<button type="button" name="remove" value="<?php echo $provider ?>" class="btn red clear" <?php echo empty($details['credentials']->client_key) ? 'disabled' : '' ?>>
-								<span><?php echo lang('global:remove'); ?></span>
-							</button>
-							
-							<button type="button" name="disable" value="0" class="btn red status <?php echo empty($details['credentials']->is_active) ? 'hidden' : '' ?>">
-								<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:disable') : lang('disable_label') ?></span>
-							</button>
-							
-							<button type="button" name="enable" value="1" class="btn green status <?php echo empty($details['credentials']->is_active) ? '' : 'hidden' ?>">
-								<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:enable') : lang('enable_label') ?></span>
-							</button>
-
-							<button type="button" class="btn orange token">
-								<span><?php echo lang('social:get_tokens'); ?></span>
-							</button>
-							
-						</div>
-						
-						<div class="tokens">
-							<dl>
-								<dt><?php echo lang('social:access_token') ?></dt>
-								<dd><?php echo isset($details['credentials']->access_token) ? "<span>{$details['credentials']->access_token}</span>" : lang('global:check-none') ?></dt>
-							
-								<?php if ($details['strategy'] == 'oauth'): ?>
-									
-								<dt><?php echo lang('social:secret') ?></dt>
-								<dd><?php echo ! empty($details['credentials']->secret) ? "<span>{$details['credentials']->secret}</span>" : lang('global:check-none') ?></dt>
-									
-								<dt><?php echo lang('social:refresh_token') ?></dt>
-								<dd><em>n/a</em></dd>
-								
-								<dt><?php echo lang('social:expires') ?></dt>
-								<dd><em>n/a</em></dd>
-							
-								<?php elseif ($details['strategy'] == 'oauth2'): ?>
-						
-								<dt><?php echo lang('social:secret') ?></dt>
-								<dd><em>n/a</em></dd>
-							
-								<dt><?php echo lang('social:refresh_token') ?></dt>
-								<dd><?php echo isset($details['credentials']->refresh_token) ? $details['credentials']->refresh_token : lang('global:check-none') ?></dt>
-								
-								<dt><?php echo lang('social:expires') ?></dt>
-								<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
-									
-								<?php endif; ?>
-							</dl>
-						</div>
-					
-					</fieldset>
-
-				</div>
+<div class="one_full">
+	<section class="title">
+		<h4><?php echo $module_details['name'] ?></h4>
+	</section>
+	
+	<section class="item">
+		<div class="content">
+	
+		<?php foreach ($providers as $provider => $details): ?>
+	
+			<div data-provider="<?php echo $provider ?>" class="provider one_half <?php echo empty($details['credentials']) ? 'no_credentials' : 'has_credentials' ?> <?php echo alternator('', 'last') ?>" style="width: 485px">
+	
+				<?php echo form_open('admin/social/save_credentials/'.$provider, 'class="save_credentials"') ?>
 				
-			<?php echo form_close() ?>
-			
+					<div class="form_inputs">
+	
+						<fieldset>
+	<h5><?php echo $details['human'] ?></h5>
+							<ul>
+								<li>
+									<label for="client_key"><?php echo lang('social:client_key'); ?> <span>*</span></label>
+									<div class="input"><?php echo form_input('client_key', isset($details['credentials']) ? $details['credentials']->client_key : ''); ?></div>				
+								</li>
+								
+								<li>
+									<label for="client_secret"><?php echo lang('social:client_secret'); ?> <span>*</span></label>
+									<div class="input"><?php echo form_input('client_secret', isset($details['credentials']) ? $details['credentials']->client_secret : ''); ?></div>				
+								</li>
+								
+								<li>
+									<label for="scope"><?php echo lang('social:scope'); ?></label>
+									<div class="input"><?php echo form_input('scope', isset($details['credentials']) ? $details['credentials']->scope : (empty($details['default_scope']) ? '' : $details['default_scope'])); ?></div>				
+								</li>
+								
+							</ul>
+	
+							<div class="buttons">
+								
+								<button type="submit" name="save" value="save" class="btn blue save" disabled>
+									<span><?php echo version_compare(CMS_VERSION, '2.1.5', '>') ? lang('buttons:save') : lang('buttons.save'); ?></span>
+								</button>
+								
+								<button type="button" name="remove" value="<?php echo $provider ?>" class="btn red clear" <?php echo empty($details['credentials']->client_key) ? 'disabled' : '' ?>>
+									<span><?php echo lang('global:remove'); ?></span>
+								</button>
+								
+								<button type="button" name="disable" value="0" class="btn red status <?php echo empty($details['credentials']->is_active) ? 'hidden' : '' ?>">
+									<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:disable') : lang('disable_label') ?></span>
+								</button>
+								
+								<button type="button" name="enable" value="1" class="btn green status <?php echo empty($details['credentials']->is_active) ? '' : 'hidden' ?>">
+									<span><?php echo version_compare(CMS_VERSION, '2.0.9', '>') ? lang('global:enable') : lang('enable_label') ?></span>
+								</button>
+	
+								<button type="button" class="btn orange token">
+									<span><?php echo lang('social:get_tokens'); ?></span>
+								</button>
+								
+							</div>
+							
+							<div class="tokens">
+								<dl>
+									<dt><?php echo lang('social:access_token') ?></dt>
+									<dd><?php echo isset($details['credentials']->access_token) ? "<span>{$details['credentials']->access_token}</span>" : lang('global:check-none') ?></dt>
+								
+									<?php if ($details['strategy'] == 'oauth'): ?>
+										
+									<dt><?php echo lang('social:secret') ?></dt>
+									<dd><?php echo ! empty($details['credentials']->secret) ? "<span>{$details['credentials']->secret}</span>" : lang('global:check-none') ?></dt>
+										
+									<dt><?php echo lang('social:refresh_token') ?></dt>
+									<dd><em>n/a</em></dd>
+									
+									<dt><?php echo lang('social:expires') ?></dt>
+									<dd><em>n/a</em></dd>
+								
+									<?php elseif ($details['strategy'] == 'oauth2'): ?>
+							
+									<dt><?php echo lang('social:secret') ?></dt>
+									<dd><em>n/a</em></dd>
+								
+									<dt><?php echo lang('social:refresh_token') ?></dt>
+									<dd><?php echo isset($details['credentials']->refresh_token) ? $details['credentials']->refresh_token : lang('global:check-none') ?></dt>
+									
+									<dt><?php echo lang('social:expires') ?></dt>
+									<dd><?php echo ! empty($details['credentials']->expires) ? date('Y-m-d h:m:s', $details['credentials']->expires) : lang('global:check-none') ?></dt>
+										
+									<?php endif; ?>
+								</dl>
+							</div>
+						
+						</fieldset>
+	
+					</div>
+					
+				<?php echo form_close() ?>
+				
+			</div>
+	
+		<?php endforeach; ?>
 		</div>
-
-	<?php endforeach; ?>
-
-</section>
+	
+	</section>
+</div>
