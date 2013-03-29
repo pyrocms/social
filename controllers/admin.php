@@ -8,6 +8,7 @@
 class Admin extends Admin_Controller
 {
 	protected $providers = array(
+		'appnet' => array('human' => 'App.net'),
 		'blooie' => array('human' => 'Blooie'),
 		'dropbox' => array('human' => 'Dropbox'),
 		'twitter' => array('human' => 'Twitter'),
