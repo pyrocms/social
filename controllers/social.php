@@ -269,6 +269,9 @@ class Social extends Public_Controller
 			    show_error('Failed to log you in.');
 			}
 		
+			// trigger a post login event for third party devs
+			Events::trigger('post_user_login');
+			
 			$this->session->set_flashdata('success', lang('user_logged_in'));
 		    redirect('/');
 		}
