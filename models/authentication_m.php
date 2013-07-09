@@ -13,4 +13,17 @@ class Authentication_m extends MY_Model
 		$input['created_at'] = time();
 		return $this->db->replace('authentications', $input);
 	}
+	
+	public function get_token($user, $provider)
+	{
+		$token = $this->db->where('user_id', $user->id)
+			->where('provider', $provider)
+			->get($this->_table)
+			->result();
+		
+		if ($token) return $token[0];
+		
+		return false;
+			
+	}
 }
