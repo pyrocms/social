@@ -26,4 +26,11 @@ class Authentication_m extends MY_Model
 		return false;
 			
 	}
+	
+	public function remove_token($user, $provider)
+	{
+		return $this->db->where('user_id', $user->id)
+			->where('provider', $provider)
+			->delete($this->_table);
+	}
 }
