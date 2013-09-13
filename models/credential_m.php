@@ -53,6 +53,7 @@ class Credential_m extends MY_Model
 		return $this->db
 			->select('provider as name')
 			->where('client_key IS NOT NULL')
+			->where('is_active', true)
 			->where('client_secret IS NOT NULL')
 			->get('credentials')
 			->result();
