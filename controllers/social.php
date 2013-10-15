@@ -5,6 +5,7 @@ class Social extends Public_Controller
 	protected $providers = array(
 		'blooie' => 'oauth2',
 		'dropbox' => 'oauth',
+		'smugmug' => 'oauth',
 		'facebook' => 'oauth2',
 		'flickr' => 'oauth',
 		'foursquare' => 'oauth2',
@@ -19,7 +20,7 @@ class Social extends Public_Controller
 		'twitter' => 'oauth',
 		'vkontakte' => 'oauth2',
 		'windowslive' => 'oauth2',
-		'yandex' => 'oauth2',
+		'yandex' => 'oauth2'
 	);
 	
 	public function __construct()
