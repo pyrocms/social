@@ -19,7 +19,7 @@ class Events_Social
         Events::register('post_user_register', array($this, 'save_authentication'));
 
 		// Post a blog to twitter and whatnot
-		Events::register('blog_article_published', array($this, 'post_status'));
+		Events::register('post_published', array($this, 'post_status'));
 
 		// User deleted clean up any authentications
 		Events::register('user_deleted',array($this,'remove_authentications'));
