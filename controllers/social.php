@@ -20,7 +20,8 @@ class Social extends Public_Controller
 		'twitter' => 'oauth',
 		'vkontakte' => 'oauth2',
 		'windowslive' => 'oauth2',
-		'yandex' => 'oauth2'
+		'yandex' => 'oauth2',
+        'shootproof' => 'oauth2'
 	);
 	
 	public function __construct()
