@@ -1,3 +1,6 @@
 [submodule "oauth"]
 	path = oauth
 	url = git@github.com:minioak/codeigniter-oauth.git
+[submodule "oauth2"]
+	path = oauth2
+	url = https://github.com/minioak/codeigniter-oauth2.git
