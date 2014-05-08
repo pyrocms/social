@@ -5,6 +5,7 @@ class Social extends Public_Controller
 	protected $providers = array(
 		'blooie' => 'oauth2',
 		'dropbox' => 'oauth',
+		'smugmug' => 'oauth',
 		'facebook' => 'oauth2',
 		'flickr' => 'oauth',
 		'foursquare' => 'oauth2',
@@ -20,6 +21,7 @@ class Social extends Public_Controller
 		'vkontakte' => 'oauth2',
 		'windowslive' => 'oauth2',
 		'yandex' => 'oauth2',
+        'shootproof' => 'oauth2'
 	);
 	
 	public function __construct()
@@ -37,6 +39,12 @@ class Social extends Public_Controller
 		{
 			$this->linked();
 			return;
+		}
+		
+		if ($method == 'session' && $this->input->get('success_url'))
+		{
+			$this->session->set_userdata('success_url', $this->input->get('success_url'));
+			redirect($this->uri->uri_string());
 		}
 
 		// Invalid method or no provider = BOOM
@@ -248,7 +256,9 @@ class Social extends Public_Controller
 				));
 			
 				// Attachment went ok so we'll redirect
-				redirect($this->input->get('success_url') ? $this->input->get('success_url') : 'social/linked');
+				$redirect = $this->session->userdata('success_url') ? $this->session->userdata('success_url') : 'social/linked';
+				$this->session->unset_userdata('success_url');
+				redirect($redirect);
 			}
 		
 			else
@@ -273,7 +283,7 @@ class Social extends Public_Controller
 			Events::trigger('post_user_login');
 			
 			$this->session->set_flashdata('success', lang('user_logged_in'));
-		    redirect('/');
+		    redirect($this->session->userdata('redirect_to') ? $this->session->userdata('redirect_to') : '');
 		}
 
 		// They aren't a user, so redirect to registration page

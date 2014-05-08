@@ -29,6 +29,8 @@ class Admin extends Admin_Controller
 		'windowslive' => array('human' => 'Windows Live'),
 		'yandex' => array('human' => 'Yandex'),
 		'youtube' => array('human' => 'YouTube'),
+		'smugmug' => array('human' => 'Smugmug'),
+        'shootproof' => array('human' => 'ShootProof')
 	);
 	
 	public function __construct()
